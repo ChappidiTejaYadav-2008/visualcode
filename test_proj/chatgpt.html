@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatGPT Style Page</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      background: #0b1220;
+      color: #e5e7eb;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, .18), transparent 25%),
+                  linear-gradient(180deg, #0f172a 0%, #020617 100%);
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: min(1000px, 100%);
+      max-width: 1000px;
+      min-height: 80vh;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 18px;
+    }
+
+    .sidebar {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 600px;
+    }
+
+    .sidebar h1 {
+      font-size: 1rem;
+      margin: 0;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: #cbd5e1;
+    }
+
+    .new-chat,
+    .chat-item {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.08);
+      color: #f8fafc;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .new-chat:hover,
+    .chat-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .chat-pane {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 20px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+      min-height: 600px;
+    }
+
+    .chat-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .chat-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .chat-header p {
+      margin: 8px 0 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .messages {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      overflow-y: auto;
+    }
+
+    .message {
+      display: grid;
+      gap: 10px;
+    }
+
+    .message.user .bubble {
+      justify-self: end;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border-radius: 18px 18px 4px 18px;
+      max-width: 78%;
+    }
+
+    .message.bot .bubble {
+      justify-self: start;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      color: #e2e8f0;
+      border-radius: 18px 18px 18px 4px;
+      max-width: 78%;
+    }
+
+    .bubble {
+      padding: 16px 18px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 0.98rem;
+    }
+
+    .input-area {
+      padding: 16px 18px;
+      border-top: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(15, 23, 42, 0.92);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .input-area textarea {
+      flex: 1;
+      min-height: 54px;
+      max-height: 130px;
+      resize: vertical;
+      padding: 14px 16px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.96);
+      color: #e2e8f0;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      outline: none;
+    }
+
+    .input-area button {
+      min-width: 110px;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 14px;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .input-area button:hover {
+      background: #1d4ed8;
+    }
+
+    .footer-note {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      text-align: center;
+      padding: 12px 18px;
+    }
+
+    @media (max-width: 820px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="new-chat">+ New chat</div>
+      <div class="chat-item">Chat about web design</div>
+      <div class="chat-item">ChatGPT page layout</div>
+      <div class="chat-item">Help with CSS</div>
+    </aside>
+
+    <section class="chat-pane">
+      <div class="chat-header">
+        <h2>ChatGPT Style</h2>
+        <p>Ask anything and get a chat-style response.</p>
+      </div>
+
+      <div class="messages" id="messages">
+        <div class="message bot">
+          <div class="bubble">Hello! Type a message below and press Send.</div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <textarea id="prompt" placeholder="Send a message..." rows="1"></textarea>
+        <button id="sendBtn">Send</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const messages = document.getElementById('messages');
+    const promptInput = document.getElementById('prompt');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addMessage(role, text) {
+      const messageEl = document.createElement('div');
+      messageEl.className = `message ${role}`;
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = text;
+      messageEl.appendChild(bubble);
+      messages.appendChild(messageEl);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function botReply(userText) {
+      const reply = `This is a static ChatGPT-style demo. You typed: "${userText}"`;
+      addMessage('bot', reply);
+    }
+
+    sendBtn.addEventListener('click', () => {
+      const value = promptInput.value.trim();
+      if (!value) return;
+      addMessage('user', value);
+      promptInput.value = '';
+      setTimeout(() => botReply(value), 500);
+    });
+
+    promptInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
